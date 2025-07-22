@@ -1,2 +1,2 @@
-const APP_NAME = 'TEMPLATE TAILWIND REACT APP';
+const APP_NAME = 'OllamaLab';
 export default APP_NAME;

@@ -1,6 +1,7 @@
 import APP_NAME from '../constants/AppName';
 import { FaReact } from 'react-icons/fa';
 import { SiTypescript, SiVite, SiTailwindcss } from 'react-icons/si';
+import { Link } from 'react-router-dom';
 
 export default function Home() {
   const dependencies = [
@@ -30,13 +31,29 @@ export default function Home() {
           </div>
           
           <h2 className="text-xl text-indigo-800 mt-4">
-            Application React (TSX) avec Vite
+            AI-Powered Productivity Suite
           </h2>
+
+          {/* Quick Actions */}
+          <div className="flex justify-center space-x-4 mt-8">
+            <Link
+              to="/setup"
+              className="px-8 py-3 bg-gradient-to-r from-blue-600 to-purple-600 text-white font-semibold rounded-lg shadow-lg hover:from-blue-700 hover:to-purple-700 transition-all duration-200 transform hover:scale-105"
+            >
+              🚀 Start Setup
+            </Link>
+            <button 
+              className="px-8 py-3 bg-white bg-opacity-20 text-white font-semibold rounded-lg shadow-lg hover:bg-opacity-30 transition-all duration-200 transform hover:scale-105"
+              onClick={() => alert('Main app coming soon!')}
+            >
+              📱 Launch App
+            </button>
+          </div>
 
         </div>
         
         <div className="mt-8 text-center text-indigo-900">
-          <h2 className="text-2xl font-semibold mb-6">STARTER PACK</h2>
+          <h2 className="text-2xl font-semibold mb-6">TECH STACK</h2>
           
           <div className="overflow-x-auto">
             <table className="min-w-full bg-white bg-opacity-50 rounded-lg overflow-hidden">
