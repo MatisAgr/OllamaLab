@@ -1,15 +1,16 @@
 import { motion } from 'framer-motion';
+import { SiSqlite, SiMongodb } from 'react-icons/si';
 import { SetupStepProps } from '../../types/setup';
 
 export default function DatabaseStep({ config, onConfigChange, onNext, onPrevious, isFirstStep }: SetupStepProps) {
-  const handleDatabaseTypeChange = (type: 'sqlite' | 'mysql' | 'postgresql') => {
+  const handleDatabaseTypeChange = (type: 'sqlite' | 'mongodb') => {
     onConfigChange({
       database: {
         ...config.database,
         type,
         // Reset other fields when changing type
         host: type === 'sqlite' ? undefined : config.database?.host || 'localhost',
-        port: type === 'sqlite' ? undefined : config.database?.port || (type === 'mysql' ? 3306 : 5432),
+        port: type === 'sqlite' ? undefined : config.database?.port || 27017,
         username: type === 'sqlite' ? undefined : config.database?.username || '',
         password: type === 'sqlite' ? undefined : config.database?.password || '',
         database: type === 'sqlite' ? undefined : config.database?.database || ''
@@ -34,25 +35,15 @@ export default function DatabaseStep({ config, onConfigChange, onNext, onPreviou
       type: 'sqlite' as const,
       name: 'SQLite',
       description: 'Local file-based database (Recommended for single user)',
-      icon: '📁',
-      pros: ['No server setup required', 'Perfect for single user', 'Fast and reliable'],
-      cons: ['Not suitable for multiple concurrent users']
+      icon: SiSqlite,
+      info: 'No configuration needed'
     },
     {
-      type: 'mysql' as const,
-      name: 'MySQL',
-      description: 'Popular relational database (Good for multi-user)',
-      icon: '🐬',
-      pros: ['Great performance', 'Wide community support', 'Multi-user ready'],
-      cons: ['Requires server setup', 'More complex configuration']
-    },
-    {
-      type: 'postgresql' as const,
-      name: 'PostgreSQL',
-      description: 'Advanced open-source database (Best for complex queries)',
-      icon: '🐘',
-      pros: ['Advanced features', 'Excellent performance', 'Strong data integrity'],
-      cons: ['Requires server setup', 'Steeper learning curve']
+      type: 'mongodb' as const,
+      name: 'MongoDB',
+      description: 'NoSQL document database (Good for multi-user)',
+      icon: SiMongodb,
+      info: 'Requires server configuration'
     }
   ];
 
@@ -107,7 +98,9 @@ export default function DatabaseStep({ config, onConfigChange, onNext, onPreviou
               `}
             >
               <div className="flex items-start space-x-4">
-                <div className="text-2xl">{db.icon}</div>
+                <div className="text-2xl">
+                  <db.icon />
+                </div>
                 <div className="flex-1">
                   <div className="font-semibold text-gray-900 dark:text-white">
                     {db.name}
@@ -115,23 +108,8 @@ export default function DatabaseStep({ config, onConfigChange, onNext, onPreviou
                   <div className="text-sm text-gray-600 dark:text-gray-300 mb-2">
                     {db.description}
                   </div>
-                  <div className="grid grid-cols-2 gap-2 text-xs">
-                    <div>
-                      <div className="text-green-600 dark:text-green-400 font-medium mb-1">Pros:</div>
-                      <ul className="text-green-700 dark:text-green-300">
-                        {db.pros.map((pro, i) => (
-                          <li key={i}>• {pro}</li>
-                        ))}
-                      </ul>
-                    </div>
-                    <div>
-                      <div className="text-orange-600 dark:text-orange-400 font-medium mb-1">Cons:</div>
-                      <ul className="text-orange-700 dark:text-orange-300">
-                        {db.cons.map((con, i) => (
-                          <li key={i}>• {con}</li>
-                        ))}
-                      </ul>
-                    </div>
+                  <div className="text-xs text-blue-600 dark:text-blue-400 font-medium">
+                    {db.info}
                   </div>
                 </div>
               </div>
@@ -182,7 +160,7 @@ export default function DatabaseStep({ config, onConfigChange, onNext, onPreviou
                   rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500
                   dark:bg-gray-700 dark:text-white
                 "
-                placeholder={config.database.type === 'mysql' ? '3306' : '5432'}
+                placeholder="27017"
               />
             </div>
           </div>

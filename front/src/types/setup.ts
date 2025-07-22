@@ -4,7 +4,7 @@ export interface SetupConfig {
   
   // Database configuration
   database: {
-    type: 'sqlite' | 'mysql' | 'postgresql';
+    type: 'sqlite' | 'mongodb';
     host?: string;
     port?: number;
     username?: string;
