@@ -12,6 +12,7 @@
   "dependencies": {
     "@tailwindcss/vite": "^4.0.15",
     "axios": "^1.8.4",
+    "country-flag-icons": "^1.5.19",
     "dotenv": "^16.4.7",
     "framer-motion": "^12.5.0",
     "react": "^19.0.0",

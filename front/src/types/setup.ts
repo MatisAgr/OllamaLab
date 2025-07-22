@@ -86,16 +86,17 @@ export interface SetupStepProps {
 export interface Language {
   code: string;
   name: string;
-  flag: string;
+  countryCode: string;
+  available: boolean;
 }
 
 export const SUPPORTED_LANGUAGES: Language[] = [
-  { code: 'en', name: 'English', flag: '🇺🇸' },
-  { code: 'fr', name: 'Français', flag: '🇫🇷' },
-  { code: 'es', name: 'Español', flag: '🇪🇸' },
-  { code: 'de', name: 'Deutsch', flag: '🇩🇪' },
-  { code: 'it', name: 'Italiano', flag: '🇮🇹' },
-  { code: 'pt', name: 'Português', flag: '🇵🇹' },
-  { code: 'zh', name: '中文', flag: '🇨🇳' },
-  { code: 'ja', name: '日本語', flag: '🇯🇵' },
+  { code: 'en', name: 'English', countryCode: 'US', available: true },
+  { code: 'fr', name: 'Français', countryCode: 'FR', available: true },
+  { code: 'es', name: 'Español', countryCode: 'ES', available: false },
+  { code: 'de', name: 'Deutsch', countryCode: 'DE', available: false },
+  { code: 'it', name: 'Italiano', countryCode: 'IT', available: false },
+  { code: 'pt', name: 'Português', countryCode: 'PT', available: false },
+  { code: 'zh', name: '中文', countryCode: 'CN', available: false },
+  { code: 'ja', name: '日本語', countryCode: 'JP', available: false },
 ];
