@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { Progress, ProgressLabel, ProgressValue, ProgressTrack } from '../components/animate-ui/base/progress';
 import { motion, AnimatePresence } from 'framer-motion';
 import { SetupConfig, SetupStep } from '../types/setup';
 import APP_NAME from '../constants/AppName';
@@ -28,21 +29,21 @@ export default function Setup() {
         enabled: false,
         requestsPerMinute: 60,
         requestsPerHour: 1000
+      },
+      features: {
+        summarize: true,
+        translate: true,
+        chat: true,
+        email: true,
+        linkedin: true,
+        tutorial: true,
+        code: true,
+        search: true,
+        image: true,
+        eventCalendar: true,
+        ganttChart: true,
+        taskPlanner: true
       }
-    },
-    features: {
-      summarize: true,
-      translate: true,
-      chat: true,
-      email: true,
-      linkedin: true,
-      tutorial: true,
-      code: true,
-      search: true,
-      image: true,
-      eventCalendar: true,
-      ganttChart: true,
-      taskPlanner: true
     }
   });
 
@@ -169,21 +170,13 @@ export default function Setup() {
           
           {/* Progress Bar */}
           <div className="mt-4">
-            <div className="flex items-center justify-between mb-2">
-              <span className="text-sm font-medium text-gray-700 dark:text-gray-300">
-                {currentStep.title}
-              </span>
-              <span className="text-sm text-gray-500 dark:text-gray-400">
-                {Math.round(progress)}%
-              </span>
-            </div>
-            <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
-              <motion.div
-                className="bg-blue-600 h-2 rounded-full"
-                initial={{ width: 0 }}
-                animate={{ width: `${progress}%` }}
-                transition={{ duration: 0.5, ease: "easeOut" }}
-              />
+
+            <div className="w-full flex justify-center">
+              <Progress value={progress} className="grid grid-cols-2 gap-x-4 gap-y-2 w-full">
+                <ProgressLabel className="text-base font-bold text-gray-100 col-start-1 row-start-1 whitespace-nowrap">{currentStep.title}</ProgressLabel>
+                <ProgressValue className="col-start-2 row-start-1 text-base font-bold text-gray-100 text-right whitespace-nowrap" />
+                <ProgressTrack className="col-span-2 h-2 rounded bg-gray-300 shadow-inner overflow-hidden mt-1" />
+              </Progress>
             </div>
           </div>
           
