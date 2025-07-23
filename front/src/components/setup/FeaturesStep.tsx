@@ -1,4 +1,5 @@
 import { motion } from 'framer-motion';
+import MentionSetting from './elements/mentionSetting';
 import StepNavigationButtons from './elements/StepNavigationButtons';
 import { SetupStepProps } from '../../types/setup';
 
@@ -49,6 +50,8 @@ export default function FeaturesStep({ config, onConfigChange, onNext, onPreviou
           Choose which AI-powered features you want to enable
         </motion.p>
       </div>
+      {/* Mention: paramètre modifiable plus tard */}
+      <MentionSetting />
 
       <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
         {featuresList.map((feature, index) => (

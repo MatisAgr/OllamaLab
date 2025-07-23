@@ -2,6 +2,7 @@
 import { motion, AnimatePresence } from 'framer-motion';
 import { SetupStepProps } from '../../types/setup';
 import StepNavigationButtons from './elements/StepNavigationButtons';
+import MentionSetting from './elements/mentionSetting';
 
 export default function UserStep({ config, onConfigChange, onNext, onPrevious, isFirstStep }: SetupStepProps) {
   const handleUserChange = (field: string, value: string) => {
@@ -44,6 +45,8 @@ export default function UserStep({ config, onConfigChange, onNext, onPrevious, i
           Tell us about yourself to personalize your experience
         </motion.p>
       </div>
+      {/* Mention: paramètre modifiable plus tard */}
+      <MentionSetting />
 
       {/* Profile Form */}
       <motion.div 

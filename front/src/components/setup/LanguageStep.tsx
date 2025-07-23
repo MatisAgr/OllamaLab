@@ -1,5 +1,6 @@
 import { motion } from 'framer-motion';
 import StepNavigationButtons from './elements/StepNavigationButtons';
+import MentionSetting from './elements/mentionSetting';
 import { MdLock, MdTranslate } from 'react-icons/md';
 import { FiFlag } from 'react-icons/fi';
 import US from 'country-flag-icons/react/3x2/US';
@@ -75,6 +76,8 @@ export default function LanguageStep({ config, onConfigChange, onNext, onPreviou
           Select your preferred language for the application interface
         </motion.p>
       </div>
+      {/* Mention: paramètre modifiable plus tard */}
+      <MentionSetting />
 
       {/* Language Options */}
       <motion.div 

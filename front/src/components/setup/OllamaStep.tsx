@@ -1,7 +1,8 @@
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import { SetupStepProps } from '../../types/setup';
 import { useState } from 'react';
 import StepNavigationButtons from './elements/StepNavigationButtons';
+import MentionSetting from './elements/mentionSetting';
 
 export default function OllamaStep({ config, onConfigChange, onNext, onPrevious, isFirstStep }: SetupStepProps) {
   const [isConnecting, setIsConnecting] = useState(false);
@@ -65,6 +66,8 @@ export default function OllamaStep({ config, onConfigChange, onNext, onPrevious,
           Configure your Ollama connection and settings
         </motion.p>
       </div>
+      {/* Mention: paramètre modifiable plus tard */}
+      <MentionSetting />
 
       <div className="max-w-md mx-auto space-y-6">
         {/* Notice Ollama requis */}
@@ -168,15 +171,17 @@ export default function OllamaStep({ config, onConfigChange, onNext, onPrevious,
               <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600"></div>
             </label>
           </div>
-          <motion.div
-            initial={false}
-            animate={{ height: config.ollama && config.ollama.rateLimit && config.ollama.rateLimit.enabled ? 'auto' : 0, opacity: config.ollama && config.ollama.rateLimit && config.ollama.rateLimit.enabled ? 1 : 0 }}
-            exit={{ height: 0, opacity: 0 }}
-            transition={{ duration: 0.3 }}
-            style={{ overflow: 'hidden' }}
-          >
+          <AnimatePresence initial={false}>
             {config.ollama && config.ollama.rateLimit && config.ollama.rateLimit.enabled && (
-              <div className="space-y-4">
+              <motion.div
+                key="rate-limit-fields"
+                initial={{ opacity: 0, height: 0, y: -10 }}
+                animate={{ opacity: 1, height: 'auto', y: 0 }}
+                exit={{ opacity: 0, height: 0, y: -10 }}
+                transition={{ duration: 0.3, ease: 'easeInOut' }}
+                style={{ overflow: 'hidden' }}
+                className="space-y-4"
+              >
                 <div>
                   <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                     Requests Per Minute
@@ -203,9 +208,9 @@ export default function OllamaStep({ config, onConfigChange, onNext, onPrevious,
                     max="10000"
                   />
                 </div>
-              </div>
+              </motion.div>
             )}
-          </motion.div>
+          </AnimatePresence>
         </div>
       </div>
 
