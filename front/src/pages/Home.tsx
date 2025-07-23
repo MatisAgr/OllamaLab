@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
   FiFileText, 
@@ -20,8 +20,8 @@ import {
 } from 'react-icons/fi';
 
 // Constantes simulées
-import APP_LOGO from '@/constants/AppLogo';
-import APP_NAME from '@/constants/AppName';
+import APP_LOGO from '../constants/AppLogo';
+import APP_NAME from '../constants/AppName';
 
 const Launcher = () => {
   const [searchQuery, setSearchQuery] = useState('');
@@ -138,7 +138,8 @@ const Launcher = () => {
   }, []);
 
   // Animation décalée pour les cartes (pour Framer Motion)
-  const getCardDelay = (index: number) => index * 0.08; // en secondes
+  // Limiter le délai maximum pour éviter des animations trop lentes
+  const getCardDelay = (index: number) => Math.min(index * 0.05, 0.6); // max 0.6s de délai
 
   return (
     <motion.div
@@ -268,7 +269,7 @@ const Launcher = () => {
 
         {/* Features Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-          <AnimatePresence>
+          <AnimatePresence mode="popLayout">
             {filteredFeatures.map((feature, index) => {
               const IconComponent = feature.icon;
               return (
@@ -276,46 +277,105 @@ const Launcher = () => {
                   key={feature.id}
                   onClick={() => alert(`Navigation vers ${feature.title}`)}
                   className="group w-full text-left"
-                  initial={{ y: 32, opacity: 0, scale: 0.95 }}
-                  animate={{ y: 0, opacity: 1, scale: 1, transition: { delay: getCardDelay(index), duration: 0.3, type: "spring", stiffness: 80 } }}
-                  exit={{ y: 32, opacity: 0, scale: 0.95 }}
-                  whileHover={{ rotate: 2, scale: 1.05, boxShadow: "0 8px 32px rgba(99,102,241,0.10)", transition: { delay: 0, duration: 0.2 } }}
+                  layout
+                  initial={{ y: 20, opacity: 0, scale: 0.95 }}
+                  animate={{ 
+                    y: 0, 
+                    opacity: 1, 
+                    scale: 1,
+                    transition: { 
+                      delay: isLoaded ? getCardDelay(index) : 0,
+                      duration: 0.25, 
+                      type: "spring", 
+                      stiffness: 100,
+                      damping: 15
+                    } 
+                  }}
+                  exit={{ 
+                    y: -20, 
+                    opacity: 0, 
+                    scale: 0.95,
+                    transition: { duration: 0.15 }
+                  }}
+                  whileHover={{ 
+                    y: -4,
+                    scale: 1.02, 
+                    transition: { 
+                      delay: 0, 
+                      duration: 0.15,
+                      type: "spring",
+                      stiffness: 400,
+                      damping: 25
+                    } 
+                  }}
+                  whileTap={{ scale: 0.98 }}
                 >
                   <motion.div
-                    className={`bg-white/70 backdrop-blur-sm rounded-2xl p-6 border border-white/30 h-full`}
-                    whileHover={{ rotate: 3, scale: 1.08 }}
-                    transition={{ duration: 0.3 }}
+                    className="bg-white/90 backdrop-blur-md rounded-3xl p-6 border border-white/40 h-full shadow-lg shadow-black/5 relative overflow-hidden group-hover:shadow-xl group-hover:shadow-black/10"
+                    whileHover={{ 
+                      borderColor: "rgba(99, 102, 241, 0.3)",
+                    }}
+                    transition={{ duration: 0.2 }}
                   >
-                    {/* Icon */}
+                    {/* Gradient overlay on hover */}
                     <motion.div
-                      className={`w-16 h-16 rounded-2xl bg-gradient-to-r ${feature.color} flex items-center justify-center mb-4`}
-                      whileHover={{ scale: 1.1, rotate: 6 }}
-                      transition={{ duration: 0.3 }}
-                    >
-                      <IconComponent className="w-8 h-8 text-white" />
-                    </motion.div>
-
-                    {/* Content */}
-                    <div>
-                      <h3 className="text-xl font-bold text-gray-900 mb-2 group-hover:text-blue-600 transition-colors duration-300">
-                        {feature.title}
-                      </h3>
-                      <p className="text-gray-600 text-sm leading-relaxed">
-                        {feature.description}
-                      </p>
-                    </div>
-
-                    {/* Arrow */}
-                    <div className="mt-4 flex justify-end">
+                      className="absolute inset-0 bg-gradient-to-br from-blue-50/50 to-purple-50/50 opacity-0 group-hover:opacity-100"
+                      transition={{ duration: 0.2 }}
+                    />
+                    
+                    {/* Content wrapper */}
+                    <div className="relative z-10">
+                      {/* Icon */}
                       <motion.div
-                        className="w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center"
-                        whileHover={{ x: 4, backgroundColor: "#DBEAFE" }}
-                        transition={{ duration: 0.3 }}
+                        className={`w-16 h-16 rounded-2xl bg-gradient-to-r ${feature.color} flex items-center justify-center mb-4 shadow-lg`}
+                        whileHover={{ 
+                          scale: 1.1, 
+                          rotate: [0, -3, 3, 0],
+                          transition: { 
+                            scale: { duration: 0.2 },
+                            rotate: { duration: 0.4, ease: "easeInOut" }
+                          }
+                        }}
                       >
-                        <svg className="w-4 h-4 text-gray-600 group-hover:text-blue-600 transition-colors duration-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                        </svg>
+                        <IconComponent className="w-8 h-8 text-white" />
                       </motion.div>
+
+                      {/* Content */}
+                      <div className="mb-4">
+                        <motion.h3 
+                          className="text-xl font-bold text-gray-900 mb-2 group-hover:text-blue-600"
+                          transition={{ duration: 0.2 }}
+                        >
+                          {feature.title}
+                        </motion.h3>
+                        <p className="text-gray-600 text-sm leading-relaxed line-clamp-2">
+                          {feature.description}
+                        </p>
+                      </div>
+
+                      {/* Arrow avec animation améliorée */}
+                      <div className="flex justify-end">
+                        <motion.div
+                          className="w-10 h-10 rounded-full bg-gray-100/80 flex items-center justify-center"
+                          whileHover={{ 
+                            x: 2,
+                            backgroundColor: "rgba(219, 234, 254, 0.8)",
+                            scale: 1.1
+                          }}
+                          transition={{ duration: 0.2 }}
+                        >
+                          <motion.svg 
+                            className="w-5 h-5 text-gray-600 group-hover:text-blue-600" 
+                            fill="none" 
+                            viewBox="0 0 24 24" 
+                            stroke="currentColor"
+                            whileHover={{ x: 2 }}
+                            transition={{ duration: 0.2 }}
+                          >
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                          </motion.svg>
+                        </motion.div>
+                      </div>
                     </div>
                   </motion.div>
                 </motion.button>
