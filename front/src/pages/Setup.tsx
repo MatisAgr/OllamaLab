@@ -190,36 +190,43 @@ export default function Setup() {
             </div>
           </div>
           
-          {/* Steps Navigation */}
-          <div className="mt-6 flex items-center justify-between">
-            {steps.map((step, index) => (
-              <div key={step.id} className="flex items-center">
-                <motion.div
-                  className={`
-                    w-8 h-8 rounded-full flex items-center justify-center text-sm font-medium
-                    ${index < currentStepIndex 
-                      ? 'bg-green-500 text-white' 
-                      : index === currentStepIndex
-                        ? 'bg-blue-600 text-white'
-                        : 'bg-gray-300 dark:bg-gray-600 text-gray-600 dark:text-gray-400'
-                    }
-                  `}
-                  initial={{ scale: 0.8 }}
-                  animate={{ scale: index === currentStepIndex ? 1.1 : 1 }}
-                  transition={{ duration: 0.2 }}
-                >
-                  {index < currentStepIndex ? '✓' : index + 1}
-                </motion.div>
-                {index < steps.length - 1 && (
-                  <div 
-                    className={`
-                      w-8 h-0.5 mx-2
-                      ${index < currentStepIndex ? 'bg-green-500' : 'bg-gray-300 dark:bg-gray-600'}
-                    `}
-                  />
-                )}
-              </div>
-            ))}
+          {/* Steps Navigation (index continu, barres et pastilles alignées sur l'affichage réel) */}
+          <div className="mt-6 flex flex-row items-center w-full">
+            {(() => {
+              const visibleSteps = steps.filter(s => s.component);
+              return visibleSteps.map((step, visibleIdx) => {
+                const isCompleted = visibleIdx < visibleSteps.findIndex(s => s.id === currentStep.id);
+                const isCurrent = visibleIdx === visibleSteps.findIndex(s => s.id === currentStep.id);
+                return (
+                  <>
+                    <motion.div
+                      key={step.id}
+                      className={`
+                        w-8 h-8 rounded-full flex items-center justify-center text-sm font-medium z-10
+                        ${isCompleted
+                          ? 'bg-green-500 text-white'
+                          : isCurrent
+                            ? 'bg-blue-600 text-white'
+                            : 'bg-gray-300 dark:bg-gray-600 text-gray-600 dark:text-gray-400'
+                        }
+                      `}
+                      initial={{ scale: 0.8 }}
+                      animate={{ scale: isCurrent ? 1.1 : 1 }}
+                      transition={{ duration: 0.2 }}
+                    >
+                      {isCompleted ? '✓' : visibleIdx + 1}
+                    </motion.div>
+                    {visibleIdx < visibleSteps.length - 1 && (
+                      <div
+                        key={step.id + '-bar'}
+                        className={`flex-1 h-0.5 ${visibleIdx < visibleSteps.findIndex(s => s.id === currentStep.id) ? 'bg-green-500' : 'bg-gray-300 dark:bg-gray-600'}`}
+                        style={{ marginLeft: -2, marginRight: -2 }}
+                      />
+                    )}
+                  </>
+                );
+              });
+            })()}
           </div>
         </div>
       </div>
