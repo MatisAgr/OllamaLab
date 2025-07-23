@@ -24,6 +24,7 @@ export interface SetupConfig {
     name: string;
     email?: string;
     avatar?: string;
+    password?: string;
   };
   
   // Multi-user settings
@@ -41,11 +42,33 @@ export interface SetupConfig {
   };
   
   // Ollama configuration
-  ollama: {
-    url: string;
-    apiKey?: string;
-    models: string[];
-    timeout: number;
+  ollama: OllamaConfig;
+
+}
+
+export interface OllamaConfig {
+  url: string;
+  apiKey?: string;
+  models: string[];
+  timeout: number;
+  rateLimit?: {
+    enabled: boolean;
+    requestsPerMinute: number;
+    requestsPerHour: number;
+  };
+  features?: {
+    summarize: boolean;
+    translate: boolean;
+    chat: boolean;
+    email: boolean;
+    linkedin: boolean;
+    tutorial: boolean;
+    code: boolean;
+    search: boolean;
+    image: boolean;
+    eventCalendar: boolean;
+    ganttChart: boolean;
+    taskPlanner: boolean;
   };
   
   // Features configuration
