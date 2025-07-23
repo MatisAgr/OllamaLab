@@ -1,12 +1,24 @@
-import { motion } from 'framer-motion';
+
+import { motion, AnimatePresence } from 'framer-motion';
 import { SetupStepProps } from '../../types/setup';
+import StepNavigationButtons from './elements/StepNavigationButtons';
 
 export default function UserStep({ config, onConfigChange, onNext, onPrevious, isFirstStep }: SetupStepProps) {
   const handleUserChange = (field: string, value: string) => {
-    const currentUser = config.user || { name: '', email: '', avatar: '' };
+    const currentUser = config.user || { name: '', avatar: '', password: '' };
     onConfigChange({
       user: {
         ...currentUser,
+        [field]: value
+      }
+    });
+  };
+
+  const handleMultiUserChange = (field: string, value: boolean | string | number) => {
+    const currentMultiUser = config.multiUser || { enabled: false };
+    onConfigChange({
+      multiUser: {
+        ...currentMultiUser,
         [field]: value
       }
     });
@@ -40,6 +52,23 @@ export default function UserStep({ config, onConfigChange, onNext, onPrevious, i
         transition={{ delay: 0.3 }}
         className="space-y-6 max-w-md mx-auto"
       >
+        {/* Multi-user switch */}
+        <div className="flex items-center justify-between p-4 border border-gray-200 dark:border-gray-600 rounded-lg">
+          <div>
+            <div className="font-medium text-gray-900 dark:text-white">Enable Multi-User</div>
+            <div className="text-sm text-gray-600 dark:text-gray-300">Allow multiple users to access this instance</div>
+          </div>
+          <label className="relative inline-flex items-center cursor-pointer">
+            <input
+              type="checkbox"
+              checked={config.multiUser?.enabled || false}
+              onChange={(e) => handleMultiUserChange('enabled', e.target.checked)}
+              className="sr-only peer"
+            />
+            <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600"></div>
+          </label>
+        </div>
+
         <div>
           <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
             Full Name *
@@ -59,26 +88,38 @@ export default function UserStep({ config, onConfigChange, onNext, onPrevious, i
           />
         </div>
 
-        <div>
-          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-            Email Address (Optional)
-          </label>
-          <input
-            type="email"
-            value={config.user?.email || ''}
-            onChange={(e) => handleUserChange('email', e.target.value)}
-            className="
-              w-full px-4 py-3 border border-gray-300 dark:border-gray-600 
-              rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500
-              dark:bg-gray-700 dark:text-white
-              transition-colors duration-200
-            "
-            placeholder="your.email@example.com"
-          />
-          <div className="text-xs text-gray-500 dark:text-gray-400 mt-1">
-            Used for notifications and account recovery
-          </div>
-        </div>
+        <AnimatePresence initial={false}>
+          {config.multiUser?.enabled && (
+            <motion.div
+              key="password-field"
+              initial={{ opacity: 0, height: 0, y: -10 }}
+              animate={{ opacity: 1, height: 'auto', y: 0 }}
+              exit={{ opacity: 0, height: 0, y: -10 }}
+              transition={{ duration: 0.3, ease: 'easeInOut' }}
+              className="overflow-hidden"
+            >
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                Profile Password *
+              </label>
+              <input
+                type="password"
+                value={config.user?.password || ''}
+                onChange={(e) => handleUserChange('password', e.target.value)}
+                className="
+                  w-full px-4 py-3 border border-gray-300 dark:border-gray-600 
+                  rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500
+                  dark:bg-gray-700 dark:text-white
+                  transition-colors duration-200
+                "
+                placeholder="Choose a password for your profile"
+                required
+              />
+              <div className="text-xs text-gray-500 dark:text-gray-400 mt-1">
+                Required for multi-user mode
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
       </motion.div>
 
       {/* Profile Preview */}
@@ -107,39 +148,12 @@ export default function UserStep({ config, onConfigChange, onNext, onPrevious, i
       )}
 
       {/* Navigation Buttons */}
-      <div className="flex justify-between pt-6">
-        <motion.button
-          initial={{ opacity: 0 }}
-          animate={{ opacity: isFirstStep ? 0.5 : 1 }}
-          onClick={onPrevious}
-          disabled={isFirstStep}
-          className="
-            px-6 py-2 border border-gray-300 dark:border-gray-600 
-            text-gray-700 dark:text-gray-300 rounded-lg 
-            hover:bg-gray-50 dark:hover:bg-gray-700 
-            disabled:opacity-50 disabled:cursor-not-allowed
-            transition-all duration-200
-          "
-        >
-          Previous
-        </motion.button>
-
-        <motion.button
-          initial={{ opacity: 0 }}
-          animate={{ opacity: config.user?.name ? 1 : 0.5 }}
-          onClick={onNext}
-          disabled={!config.user?.name}
-          whileHover={config.user?.name ? { scale: 1.05 } : {}}
-          whileTap={config.user?.name ? { scale: 0.95 } : {}}
-          className="
-            px-6 py-2 bg-blue-600 text-white rounded-lg 
-            hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed
-            transition-all duration-200
-          "
-        >
-          Next
-        </motion.button>
-      </div>
+      <StepNavigationButtons
+        onPrevious={onPrevious}
+        onNext={onNext}
+        isFirstStep={isFirstStep}
+        isNextEnabled={!!config.user?.name && (!config.multiUser?.enabled || !!config.user?.password)}
+      />
     </div>
   );
 }

@@ -1,8 +1,11 @@
 import { motion } from 'framer-motion';
+import StepNavigationButtons from './elements/StepNavigationButtons';
 import { SetupStepProps } from '../../types/setup';
 
+type FeatureKey = keyof NonNullable<SetupStepProps['config']['features']>;
+
 export default function FeaturesStep({ config, onConfigChange, onNext, onPrevious, isFirstStep }: SetupStepProps) {
-  const handleFeatureToggle = (feature: string) => {
+  const handleFeatureToggle = (feature: FeatureKey) => {
     const currentFeatures = config.features || {};
     onConfigChange({
       features: {
@@ -12,7 +15,7 @@ export default function FeaturesStep({ config, onConfigChange, onNext, onPreviou
     });
   };
 
-  const features = [
+  const featuresList: { id: FeatureKey; name: string; icon: string; description: string }[] = [
     { id: 'summarize', name: 'Summarize', icon: '📄', description: 'Summarize text content or documents' },
     { id: 'translate', name: 'Translate', icon: '🌐', description: 'Translate text between languages' },
     { id: 'chat', name: 'Chat', icon: '💬', description: 'Engage in conversational interactions' },
@@ -48,7 +51,7 @@ export default function FeaturesStep({ config, onConfigChange, onNext, onPreviou
       </div>
 
       <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-        {features.map((feature, index) => (
+        {featuresList.map((feature, index) => (
           <motion.div
             key={feature.id}
             initial={{ opacity: 0, scale: 0.8 }}
@@ -56,7 +59,7 @@ export default function FeaturesStep({ config, onConfigChange, onNext, onPreviou
             transition={{ delay: index * 0.05 }}
             className={`
               p-4 rounded-lg border-2 cursor-pointer transition-all duration-200
-              ${config.features?.[feature.id] 
+              ${(config.features && config.features[feature.id])
                 ? 'border-blue-500 bg-blue-50 dark:bg-blue-900/20' 
                 : 'border-gray-200 dark:border-gray-600 hover:border-gray-300 dark:hover:border-gray-500 bg-white dark:bg-gray-700'
               }
@@ -73,12 +76,12 @@ export default function FeaturesStep({ config, onConfigChange, onNext, onPreviou
             <div className="mt-3">
               <div className={`
                 w-4 h-4 rounded border-2 transition-all duration-200
-                ${config.features?.[feature.id]
+                ${(config.features && config.features[feature.id])
                   ? 'bg-blue-500 border-blue-500'
                   : 'border-gray-300 dark:border-gray-600'
                 }
               `}>
-                {config.features?.[feature.id] && (
+                {(config.features && config.features[feature.id]) && (
                   <div className="text-white text-xs leading-none">✓</div>
                 )}
               </div>
@@ -90,8 +93,7 @@ export default function FeaturesStep({ config, onConfigChange, onNext, onPreviou
       <div className="flex items-center justify-center space-x-4">
         <button
           onClick={() => {
-            const allFeatures = {};
-            features.forEach(f => allFeatures[f.id] = true);
+            const allFeatures = Object.fromEntries(featuresList.map(f => [f.id, true])) as Record<FeatureKey, boolean>;
             onConfigChange({ features: allFeatures });
           }}
           className="px-4 py-2 text-blue-600 dark:text-blue-400 hover:bg-blue-50 dark:hover:bg-blue-900/20 rounded-lg transition-colors"
@@ -100,8 +102,7 @@ export default function FeaturesStep({ config, onConfigChange, onNext, onPreviou
         </button>
         <button
           onClick={() => {
-            const noFeatures = {};
-            features.forEach(f => noFeatures[f.id] = false);
+            const noFeatures = Object.fromEntries(featuresList.map(f => [f.id, false])) as Record<FeatureKey, boolean>;
             onConfigChange({ features: noFeatures });
           }}
           className="px-4 py-2 text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition-colors"
@@ -110,22 +111,12 @@ export default function FeaturesStep({ config, onConfigChange, onNext, onPreviou
         </button>
       </div>
 
-      <div className="flex justify-between pt-6">
-        <button
-          onClick={onPrevious}
-          disabled={isFirstStep}
-          className="px-6 py-2 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 disabled:opacity-50 disabled:cursor-not-allowed"
-        >
-          Previous
-        </button>
-
-        <button
-          onClick={onNext}
-          className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
-        >
-          Next
-        </button>
-      </div>
+      <StepNavigationButtons
+        onPrevious={onPrevious}
+        onNext={onNext}
+        isFirstStep={isFirstStep}
+        isNextEnabled={true}
+      />
     </div>
   );
 }

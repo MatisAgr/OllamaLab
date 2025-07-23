@@ -1,4 +1,5 @@
 import { motion } from 'framer-motion';
+import StepNavigationButtons from './elements/StepNavigationButtons';
 import { SiSqlite, SiMongodb } from 'react-icons/si';
 import { SetupStepProps } from '../../types/setup';
 
@@ -261,56 +262,12 @@ export default function DatabaseStep({ config, onConfigChange, onNext, onPreviou
       )}
 
       {/* Navigation Buttons */}
-      <div className="flex justify-between pt-6">
-        <motion.button
-          initial={{ opacity: 0, x: -20 }}
-          animate={{ opacity: isFirstStep ? 0.5 : 1, x: 0 }}
-          transition={{ delay: 0.3, duration: 0.3 }}
-          whileHover={!isFirstStep ? { 
-            scale: 1.05, 
-            transition: { duration: 0.2 }
-          } : {}}
-          whileTap={!isFirstStep ? { 
-            scale: 0.95,
-            transition: { duration: 0.1 }
-          } : {}}
-          onClick={onPrevious}
-          disabled={isFirstStep}
-          className="
-            px-6 py-2 border border-gray-300 dark:border-gray-600 
-            text-gray-700 dark:text-gray-300 rounded-lg 
-            hover:bg-gray-50 dark:hover:bg-gray-700 hover:border-gray-400
-            disabled:opacity-50 disabled:cursor-not-allowed
-            transition-all duration-300 ease-out
-          "
-        >
-          Previous
-        </motion.button>
-
-        <motion.button
-          initial={{ opacity: 0, x: 20 }}
-          animate={{ opacity: config.database?.type ? 1 : 0.5, x: 0 }}
-          transition={{ delay: 0.3, duration: 0.3 }}
-          onClick={onNext}
-          disabled={!config.database?.type}
-          whileHover={config.database?.type ? { 
-            scale: 1.05,
-            transition: { duration: 0.2 }
-          } : {}}
-          whileTap={config.database?.type ? { 
-            scale: 0.95,
-            transition: { duration: 0.1 }
-          } : {}}
-          className="
-            px-6 py-2 bg-blue-600 text-white rounded-lg 
-            hover:bg-blue-700 hover:shadow-lg hover:shadow-blue-500/25
-            disabled:opacity-50 disabled:cursor-not-allowed
-            transition-all duration-300 ease-out
-          "
-        >
-          Next
-        </motion.button>
-      </div>
+      <StepNavigationButtons
+        onPrevious={onPrevious}
+        onNext={onNext}
+        isFirstStep={isFirstStep}
+        isNextEnabled={!!config.database?.type}
+      />
     </div>
   );
 }
