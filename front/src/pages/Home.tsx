@@ -20,8 +20,8 @@ import {
 } from 'react-icons/fi';
 
 // Constantes simulées
-const APP_LOGO = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%236366f1' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M9 12l2 2 4-4'/%3E%3Cpath d='M21 12c0 4.97-4.03 9-9 9s-9-4.03-9-9 4.03-9 9-9 9 4.03 9 9z'/%3E%3C/svg%3E";
-const APP_NAME = "AI Assistant";
+import APP_LOGO from '@/constants/AppLogo';
+import APP_NAME from '@/constants/AppName';
 
 const Launcher = () => {
   const [searchQuery, setSearchQuery] = useState('');
