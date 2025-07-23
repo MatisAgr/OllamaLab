@@ -8,12 +8,27 @@ interface StepNavigationButtonsProps {
 }
 
 export default function StepNavigationButtons({ onPrevious, onNext, isFirstStep, isNextEnabled }: StepNavigationButtonsProps) {
+  // Scroll to top utilitaire
+  const scrollToTop = () => {
+    window.scrollTo({ top: 0, left: 0, behavior: 'smooth' });
+  };
+
+  const handlePrevious = () => {
+    scrollToTop();
+    onPrevious();
+  };
+
+  const handleNext = () => {
+    scrollToTop();
+    onNext();
+  };
+
   return (
     <div className="flex justify-between pt-6">
       <motion.button
         initial={{ opacity: 0 }}
         animate={{ opacity: isFirstStep ? 0.5 : 1 }}
-        onClick={onPrevious}
+        onClick={handlePrevious}
         disabled={isFirstStep}
         className="
           px-6 py-2 border border-gray-300 dark:border-gray-600 
@@ -29,7 +44,7 @@ export default function StepNavigationButtons({ onPrevious, onNext, isFirstStep,
       <motion.button
         initial={{ opacity: 0 }}
         animate={{ opacity: isNextEnabled ? 1 : 0.5 }}
-        onClick={onNext}
+        onClick={handleNext}
         disabled={!isNextEnabled}
         whileHover={isNextEnabled ? { scale: 1.05 } : {}}
         whileTap={isNextEnabled ? { scale: 0.95 } : {}}

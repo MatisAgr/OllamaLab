@@ -141,9 +141,6 @@ export default function Setup() {
             return { ...step, isCompleted: config.multiUser?.enabled !== undefined };
           case 'user':
             return { ...step, isCompleted: !!config.user?.name && (!config.multiUser?.enabled || !!config.user?.password) };
-          case 'ratelimit':
-          // case 'ratelimit':
-          //   return { ...step, isCompleted: !!config.rateLimit?.enabled !== undefined };
           case 'ollama':
             return { ...step, isCompleted: !!config.ollama?.url };
           default:
