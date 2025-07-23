@@ -85,22 +85,42 @@ export default function DatabaseStep({ config, onConfigChange, onNext, onPreviou
               key={db.type}
               initial={{ opacity: 0, x: -20 }}
               animate={{ opacity: 1, x: 0 }}
-              transition={{ delay: 0.4 + index * 0.1 }}
-              whileHover={{ scale: 1.02 }}
-              whileTap={{ scale: 0.98 }}
+              transition={{ delay: 0.1 + index * 0.05, duration: 0.3 }}
+              whileHover={{ 
+                scale: 1.02, 
+                transition: { duration: 0.2, ease: "easeOut" }
+              }}
+              whileTap={{ 
+                scale: 0.98, 
+                transition: { duration: 0.1 }
+              }}
               onClick={() => handleDatabaseTypeChange(db.type)}
               className={`
-                p-4 rounded-lg border-2 text-left transition-all duration-200
+                group p-4 rounded-lg border-2 text-left transition-all duration-300 ease-out
                 ${config.database?.type === db.type
-                  ? 'border-blue-500 bg-blue-50 dark:bg-blue-900/20'
-                  : 'border-gray-200 dark:border-gray-600 hover:border-gray-300 dark:hover:border-gray-500 bg-white dark:bg-gray-700'
+                  ? 'border-blue-500 bg-blue-50 dark:bg-blue-900/20 shadow-lg shadow-blue-500/25'
+                  : 'border-gray-200 dark:border-gray-600 hover:border-blue-300 dark:hover:border-blue-500 bg-white dark:bg-gray-700 hover:shadow-md'
                 }
               `}
             >
               <div className="flex items-start space-x-4">
-                <div className="text-2xl">
-                  <db.icon />
-                </div>
+                <motion.div 
+                  className="text-3xl"
+                  whileHover={{ 
+                    scale: 1.1, 
+                    transition: { duration: 0.2, ease: "easeOut" }
+                  }}
+                >
+                  <db.icon 
+                    className={`transition-colors duration-300 ${
+                      config.database?.type === db.type
+                        ? db.type === 'sqlite' 
+                          ? 'text-blue-600 dark:text-blue-400' 
+                          : 'text-green-600 dark:text-green-400'
+                        : 'text-gray-500 dark:text-gray-400 group-hover:text-blue-500'
+                    }`}
+                  />
+                </motion.div>
                 <div className="flex-1">
                   <div className="font-semibold text-gray-900 dark:text-white">
                     {db.name}
@@ -243,32 +263,49 @@ export default function DatabaseStep({ config, onConfigChange, onNext, onPreviou
       {/* Navigation Buttons */}
       <div className="flex justify-between pt-6">
         <motion.button
-          initial={{ opacity: 0 }}
-          animate={{ opacity: isFirstStep ? 0.5 : 1 }}
+          initial={{ opacity: 0, x: -20 }}
+          animate={{ opacity: isFirstStep ? 0.5 : 1, x: 0 }}
+          transition={{ delay: 0.3, duration: 0.3 }}
+          whileHover={!isFirstStep ? { 
+            scale: 1.05, 
+            transition: { duration: 0.2 }
+          } : {}}
+          whileTap={!isFirstStep ? { 
+            scale: 0.95,
+            transition: { duration: 0.1 }
+          } : {}}
           onClick={onPrevious}
           disabled={isFirstStep}
           className="
             px-6 py-2 border border-gray-300 dark:border-gray-600 
             text-gray-700 dark:text-gray-300 rounded-lg 
-            hover:bg-gray-50 dark:hover:bg-gray-700 
+            hover:bg-gray-50 dark:hover:bg-gray-700 hover:border-gray-400
             disabled:opacity-50 disabled:cursor-not-allowed
-            transition-all duration-200
+            transition-all duration-300 ease-out
           "
         >
           Previous
         </motion.button>
 
         <motion.button
-          initial={{ opacity: 0 }}
-          animate={{ opacity: config.database?.type ? 1 : 0.5 }}
+          initial={{ opacity: 0, x: 20 }}
+          animate={{ opacity: config.database?.type ? 1 : 0.5, x: 0 }}
+          transition={{ delay: 0.3, duration: 0.3 }}
           onClick={onNext}
           disabled={!config.database?.type}
-          whileHover={config.database?.type ? { scale: 1.05 } : {}}
-          whileTap={config.database?.type ? { scale: 0.95 } : {}}
+          whileHover={config.database?.type ? { 
+            scale: 1.05,
+            transition: { duration: 0.2 }
+          } : {}}
+          whileTap={config.database?.type ? { 
+            scale: 0.95,
+            transition: { duration: 0.1 }
+          } : {}}
           className="
             px-6 py-2 bg-blue-600 text-white rounded-lg 
-            hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed
-            transition-all duration-200
+            hover:bg-blue-700 hover:shadow-lg hover:shadow-blue-500/25
+            disabled:opacity-50 disabled:cursor-not-allowed
+            transition-all duration-300 ease-out
           "
         >
           Next
