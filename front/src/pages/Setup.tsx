@@ -8,10 +8,7 @@ import APP_LOGO from '../constants/AppLogo';
 import WelcomeStep from '../components/setup/WelcomeStep';
 import LanguageStep from '../components/setup/LanguageStep';
 import DatabaseStep from '../components/setup/DatabaseStep';
-import ThemeStep from '../components/setup/ThemeStep';
 import UserStep from '../components/setup/UserStep';
-import MultiUserStep from '../components/setup/MultiUserStep';
-import RateLimitStep from '../components/setup/RateLimitStep';
 import OllamaStep from '../components/setup/OllamaStep';
 import FeaturesStep from '../components/setup/FeaturesStep';
 import FinalStep from '../components/setup/FinalStep';
@@ -20,23 +17,18 @@ export default function Setup() {
   const [currentStepIndex, setCurrentStepIndex] = useState(0);
   const [config, setConfig] = useState<Partial<SetupConfig>>({
     language: 'en',
-    theme: {
-      mode: 'system',
-      primaryColor: '#3B82F6',
-      fontSize: 'medium'
-    },
     multiUser: {
       enabled: false
-    },
-    rateLimit: {
-      enabled: true,
-      requestsPerMinute: 60,
-      requestsPerHour: 1000
     },
     ollama: {
       url: 'http://localhost:11434',
       timeout: 30000,
-      models: []
+      models: [],
+      rateLimit: {
+        enabled: false,
+        requestsPerMinute: 60,
+        requestsPerHour: 1000
+      }
     },
     features: {
       summarize: true,
@@ -80,37 +72,14 @@ export default function Setup() {
       isCompleted: !!config.database?.type
     },
     {
-      id: 'theme',
-      title: 'Theme',
-      description: 'Customize your appearance',
-      component: ThemeStep,
-      isRequired: false,
-      isCompleted: !!config.theme?.mode
-    },
-    {
       id: 'user',
       title: 'User Profile',
       description: 'Set up your profile',
       component: UserStep,
       isRequired: true,
-      isCompleted: !!config.user?.name
+      isCompleted: !!config.user?.name && (!config.multiUser?.enabled || !!config.user?.password)
     },
-    {
-      id: 'multiuser',
-      title: 'Multi-User',
-      description: 'Configure multi-user settings',
-      component: MultiUserStep,
-      isRequired: false,
-      isCompleted: config.multiUser?.enabled !== undefined
-    },
-    {
-      id: 'ratelimit',
-      title: 'Rate Limiting',
-      description: 'Configure API rate limits',
-      component: RateLimitStep,
-      isRequired: false,
-      isCompleted: !!config.rateLimit?.enabled
-    },
+    // Step RateLimit supprimée, la config est déplacée dans OllamaStep
     {
       id: 'ollama',
       title: 'Ollama Config',
@@ -168,14 +137,13 @@ export default function Setup() {
             return { ...step, isCompleted: !!config.language };
           case 'database':
             return { ...step, isCompleted: !!config.database?.type };
-          case 'theme':
-            return { ...step, isCompleted: !!config.theme?.mode };
-          case 'user':
-            return { ...step, isCompleted: !!config.user?.name };
           case 'multiuser':
             return { ...step, isCompleted: config.multiUser?.enabled !== undefined };
+          case 'user':
+            return { ...step, isCompleted: !!config.user?.name && (!config.multiUser?.enabled || !!config.user?.password) };
           case 'ratelimit':
-            return { ...step, isCompleted: !!config.rateLimit?.enabled !== undefined };
+          // case 'ratelimit':
+          //   return { ...step, isCompleted: !!config.rateLimit?.enabled !== undefined };
           case 'ollama':
             return { ...step, isCompleted: !!config.ollama?.url };
           default:
