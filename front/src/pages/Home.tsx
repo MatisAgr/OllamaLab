@@ -1,17 +1,17 @@
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { 
-  FiFileText, 
-  FiGlobe, 
-  FiMessageCircle, 
-  FiMail, 
-  FiLinkedin, 
-  FiBookOpen, 
-  FiCode, 
-  FiSearch, 
-  FiImage, 
-  FiCalendar, 
-  FiBarChart, 
+import {
+  FiFileText,
+  FiGlobe,
+  FiMessageCircle,
+  FiMail,
+  FiLinkedin,
+  FiBookOpen,
+  FiCode,
+  FiSearch,
+  FiImage,
+  FiCalendar,
+  FiBarChart,
   FiCheckSquare,
   FiUser,
   FiSettings,
@@ -22,8 +22,9 @@ import {
 // Constantes simulées
 import APP_LOGO from '../constants/AppLogo';
 import APP_NAME from '../constants/AppName';
+import { Link } from 'react-router-dom';
 
-const Launcher = () => {
+const Home = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [showProfile, setShowProfile] = useState(false);
   const [isLoaded, setIsLoaded] = useState(false);
@@ -273,112 +274,114 @@ const Launcher = () => {
             {filteredFeatures.map((feature, index) => {
               const IconComponent = feature.icon;
               return (
-                <motion.button
-                  key={feature.id}
-                  onClick={() => alert(`Navigation vers ${feature.title}`)}
-                  className="group w-full text-left"
-                  layout
-                  initial={{ y: 20, opacity: 0, scale: 0.95 }}
-                  animate={{ 
-                    y: 0, 
-                    opacity: 1, 
-                    scale: 1,
-                    transition: { 
-                      delay: isLoaded ? getCardDelay(index) : 0,
-                      duration: 0.25, 
-                      type: "spring", 
-                      stiffness: 100,
-                      damping: 15
-                    } 
-                  }}
-                  exit={{ 
-                    y: -20, 
-                    opacity: 0, 
-                    scale: 0.95,
-                    transition: { duration: 0.15 }
-                  }}
-                  whileHover={{ 
-                    y: -4,
-                    scale: 1.02, 
-                    transition: { 
-                      delay: 0, 
-                      duration: 0.15,
-                      type: "spring",
-                      stiffness: 400,
-                      damping: 25
-                    } 
-                  }}
-                  whileTap={{ scale: 0.98 }}
-                >
-                  <motion.div
-                    className="bg-white/90 backdrop-blur-md rounded-3xl p-6 border border-white/40 h-full shadow-lg shadow-black/5 relative overflow-hidden group-hover:shadow-xl group-hover:shadow-black/10"
-                    whileHover={{ 
-                      borderColor: "rgba(99, 102, 241, 0.3)",
+                <Link to={feature.path} key={feature.id}>
+                  <motion.button
+                    key={feature.id}
+                    onClick={() => console.log(`Navigating to ${feature.title}`)}
+                    className="group w-full text-left"
+                    layout
+                    initial={{ y: 20, opacity: 0, scale: 0.95 }}
+                    animate={{
+                      y: 0,
+                      opacity: 1,
+                      scale: 1,
+                      transition: {
+                        delay: isLoaded ? getCardDelay(index) : 0,
+                        duration: 0.25,
+                        type: "spring",
+                        stiffness: 100,
+                        damping: 15
+                      }
                     }}
-                    transition={{ duration: 0.2 }}
+                    exit={{
+                      y: -20,
+                      opacity: 0,
+                      scale: 0.95,
+                      transition: { duration: 0.15 }
+                    }}
+                    whileHover={{
+                      y: -4,
+                      scale: 1.02,
+                      transition: {
+                        delay: 0,
+                        duration: 0.15,
+                        type: "spring",
+                        stiffness: 400,
+                        damping: 25
+                      }
+                    }}
+                    whileTap={{ scale: 0.98 }}
                   >
-                    {/* Gradient overlay on hover */}
                     <motion.div
-                      className="absolute inset-0 bg-gradient-to-br from-blue-50/50 to-purple-50/50 opacity-0 group-hover:opacity-100"
+                      className="bg-white/90 backdrop-blur-md rounded-3xl p-6 border border-white/40 h-full shadow-lg shadow-black/5 relative overflow-hidden group-hover:shadow-xl group-hover:shadow-black/10"
+                      whileHover={{
+                        borderColor: "rgba(99, 102, 241, 0.3)",
+                      }}
                       transition={{ duration: 0.2 }}
-                    />
-                    
-                    {/* Content wrapper */}
-                    <div className="relative z-10">
-                      {/* Icon */}
+                    >
+                      {/* Gradient overlay on hover */}
                       <motion.div
-                        className={`w-16 h-16 rounded-2xl bg-gradient-to-r ${feature.color} flex items-center justify-center mb-4 shadow-lg`}
-                        whileHover={{ 
-                          scale: 1.1, 
-                          rotate: [0, -3, 3, 0],
-                          transition: { 
-                            scale: { duration: 0.2 },
-                            rotate: { duration: 0.4, ease: "easeInOut" }
-                          }
-                        }}
-                      >
-                        <IconComponent className="w-8 h-8 text-white" />
-                      </motion.div>
+                        className="absolute inset-0 bg-gradient-to-br from-blue-50/50 to-purple-50/50 opacity-0 group-hover:opacity-100"
+                        transition={{ duration: 0.2 }}
+                      />
 
-                      {/* Content */}
-                      <div className="mb-4">
-                        <motion.h3 
-                          className="text-xl font-bold text-gray-900 mb-2 group-hover:text-blue-600"
-                          transition={{ duration: 0.2 }}
-                        >
-                          {feature.title}
-                        </motion.h3>
-                        <p className="text-gray-600 text-sm leading-relaxed line-clamp-2">
-                          {feature.description}
-                        </p>
-                      </div>
-
-                      {/* Arrow avec animation améliorée */}
-                      <div className="flex justify-end">
+                      {/* Content wrapper */}
+                      <div className="relative z-10">
+                        {/* Icon */}
                         <motion.div
-                          className="w-10 h-10 rounded-full bg-gray-100/80 flex items-center justify-center"
-                          whileHover={{ 
-                            x: 2,
-                            backgroundColor: "rgba(219, 234, 254, 0.8)",
-                            scale: 1.1
+                          className={`w-16 h-16 rounded-2xl bg-gradient-to-r ${feature.color} flex items-center justify-center mb-4 shadow-lg`}
+                          whileHover={{
+                            scale: 1.1,
+                            rotate: [0, -3, 3, 0],
+                            transition: {
+                              scale: { duration: 0.2 },
+                              rotate: { duration: 0.4, ease: "easeInOut" }
+                            }
                           }}
-                          transition={{ duration: 0.2 }}
                         >
-                          <motion.svg 
-                            className="w-5 h-5 text-gray-600 group-hover:text-blue-600" 
-                            fill="none" 
-                            viewBox="0 0 24 24" 
-                            stroke="currentColor"
-                            whileHover={{ x: 2 }}
+                          <IconComponent className="w-8 h-8 text-white" />
+                        </motion.div>
+
+                        {/* Content */}
+                        <div className="mb-4">
+                          <motion.h3
+                            className="text-xl font-bold text-gray-900 mb-2 group-hover:text-blue-600"
                             transition={{ duration: 0.2 }}
                           >
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                          </motion.svg>
-                        </motion.div>
+                            {feature.title}
+                          </motion.h3>
+                          <p className="text-gray-600 text-sm leading-relaxed line-clamp-2">
+                            {feature.description}
+                          </p>
+                        </div>
+
+                        {/* Arrow avec animation améliorée */}
+                        <div className="flex justify-end">
+                          <motion.div
+                            className="w-10 h-10 rounded-full bg-gray-100/80 flex items-center justify-center"
+                            whileHover={{
+                              x: 2,
+                              backgroundColor: "rgba(219, 234, 254, 0.8)",
+                              scale: 1.1
+                            }}
+                            transition={{ duration: 0.2 }}
+                          >
+                            <motion.svg
+                              className="w-5 h-5 text-gray-600 group-hover:text-blue-600"
+                              fill="none"
+                              viewBox="0 0 24 24"
+                              stroke="currentColor"
+                              whileHover={{ x: 2 }}
+                              transition={{ duration: 0.2 }}
+                            >
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                            </motion.svg>
+                          </motion.div>
+                        </div>
                       </div>
-                    </div>
-                  </motion.div>
-                </motion.button>
+                    </motion.div>
+                  </motion.button>
+                </Link>
               );
             })}
           </AnimatePresence>
@@ -421,4 +424,4 @@ const Launcher = () => {
   );
 };
 
-export default Launcher;
+export default Home;
