@@ -3,15 +3,39 @@ import MentionSetting from './elements/mentionSetting';
 import StepNavigationButtons from './elements/StepNavigationButtons';
 import { SetupStepProps } from '../../types/setup';
 
-type FeatureKey = keyof NonNullable<SetupStepProps['config']['features']>;
+type FeatureKey = keyof NonNullable<NonNullable<SetupStepProps['config']['ollama']>['features']>;
 
 export default function FeaturesStep({ config, onConfigChange, onNext, onPrevious, isFirstStep }: SetupStepProps) {
+  const defaultFeatures: Record<FeatureKey, boolean> = {
+    summarize: false,
+    translate: false,
+    chat: false,
+    email: false,
+    linkedin: false,
+    tutorial: false,
+    code: false,
+    search: false,
+    image: false,
+    eventCalendar: false,
+    ganttChart: false,
+    taskPlanner: false
+  };
+
   const handleFeatureToggle = (feature: FeatureKey) => {
-    const currentFeatures = config.features || {};
+    const currentOllama = (config.ollama || {}) as Partial<import('../../types/setup').OllamaConfig>;
+    const currentFeatures = { ...defaultFeatures, ...(currentOllama.features || {}) };
+    const updatedFeatures: Record<FeatureKey, boolean> = {
+      ...currentFeatures,
+      [feature]: !currentFeatures[feature]
+    };
     onConfigChange({
-      features: {
-        ...currentFeatures,
-        [feature]: !currentFeatures[feature]
+      ollama: {
+        url: currentOllama.url || '',
+        models: currentOllama.models || [],
+        timeout: currentOllama.timeout || 30000,
+        apiKey: currentOllama.apiKey,
+        rateLimit: currentOllama.rateLimit,
+        features: updatedFeatures
       }
     });
   };
@@ -62,7 +86,7 @@ export default function FeaturesStep({ config, onConfigChange, onNext, onPreviou
             transition={{ delay: index * 0.05 }}
             className={`
               p-4 rounded-lg border-2 cursor-pointer transition-all duration-200
-              ${(config.features && config.features[feature.id])
+              ${(config.ollama && config.ollama.features && config.ollama.features[feature.id])
                 ? 'border-blue-500 bg-blue-50 dark:bg-blue-900/20' 
                 : 'border-gray-200 dark:border-gray-600 hover:border-gray-300 dark:hover:border-gray-500 bg-white dark:bg-gray-700'
               }
@@ -79,12 +103,12 @@ export default function FeaturesStep({ config, onConfigChange, onNext, onPreviou
             <div className="mt-3">
               <div className={`
                 w-4 h-4 rounded border-2 transition-all duration-200
-                ${(config.features && config.features[feature.id])
+                ${(config.ollama && config.ollama.features && config.ollama.features[feature.id])
                   ? 'bg-blue-500 border-blue-500'
                   : 'border-gray-300 dark:border-gray-600'
                 }
               `}>
-                {(config.features && config.features[feature.id]) && (
+                {(config.ollama && config.ollama.features && config.ollama.features[feature.id]) && (
                   <div className="text-white text-xs leading-none">✓</div>
                 )}
               </div>
@@ -96,8 +120,19 @@ export default function FeaturesStep({ config, onConfigChange, onNext, onPreviou
       <div className="flex items-center justify-center space-x-4">
         <button
           onClick={() => {
-            const allFeatures = Object.fromEntries(featuresList.map(f => [f.id, true])) as Record<FeatureKey, boolean>;
-            onConfigChange({ features: allFeatures });
+            const allFeatures: Record<FeatureKey, boolean> = { ...defaultFeatures };
+            Object.keys(allFeatures).forEach(k => { allFeatures[k as FeatureKey] = true; });
+            const currentOllama = (config.ollama || {}) as Partial<import('../../types/setup').OllamaConfig>;
+            onConfigChange({
+              ollama: {
+                url: currentOllama.url || '',
+                models: currentOllama.models || [],
+                timeout: currentOllama.timeout || 30000,
+                apiKey: currentOllama.apiKey,
+                rateLimit: currentOllama.rateLimit,
+                features: allFeatures
+              }
+            });
           }}
           className="px-4 py-2 text-blue-600 dark:text-blue-400 hover:bg-blue-50 dark:hover:bg-blue-900/20 rounded-lg transition-colors"
         >
@@ -105,8 +140,19 @@ export default function FeaturesStep({ config, onConfigChange, onNext, onPreviou
         </button>
         <button
           onClick={() => {
-            const noFeatures = Object.fromEntries(featuresList.map(f => [f.id, false])) as Record<FeatureKey, boolean>;
-            onConfigChange({ features: noFeatures });
+            const noFeatures: Record<FeatureKey, boolean> = { ...defaultFeatures };
+            Object.keys(noFeatures).forEach(k => { noFeatures[k as FeatureKey] = false; });
+            const currentOllama = (config.ollama || {}) as Partial<import('../../types/setup').OllamaConfig>;
+            onConfigChange({
+              ollama: {
+                url: currentOllama.url || '',
+                models: currentOllama.models || [],
+                timeout: currentOllama.timeout || 30000,
+                apiKey: currentOllama.apiKey,
+                rateLimit: currentOllama.rateLimit,
+                features: noFeatures
+              }
+            });
           }}
           className="px-4 py-2 text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition-colors"
         >

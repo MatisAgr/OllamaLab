@@ -8,11 +8,28 @@ export default function OllamaStep({ config, onConfigChange, onNext, onPrevious,
   const [isConnecting, setIsConnecting] = useState(false);
   const [connectionStatus, setConnectionStatus] = useState<'idle' | 'success' | 'error'>('idle');
 
+  const defaultFeatures = {
+    summarize: false,
+    translate: false,
+    chat: false,
+    email: false,
+    linkedin: false,
+    tutorial: false,
+    code: false,
+    search: false,
+    image: false,
+    eventCalendar: false,
+    ganttChart: false,
+    taskPlanner: false
+  };
+
   const handleOllamaChange = (field: string, value: string | number | string[]) => {
-    const currentOllama = config.ollama || { url: 'http://localhost:11434', timeout: 30000, models: [], rateLimit: { enabled: false, requestsPerMinute: 60, requestsPerHour: 1000 } };
+    const currentOllama = config.ollama || { url: 'http://localhost:11434', timeout: 30000, models: [], rateLimit: { enabled: false, requestsPerMinute: 60, requestsPerHour: 1000 }, features: { ...defaultFeatures } };
+    const features = { ...defaultFeatures, ...(currentOllama.features || {}) };
     onConfigChange({
       ollama: {
         ...currentOllama,
+        features,
         [field]: value
       }
     });

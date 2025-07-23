@@ -56,20 +56,6 @@ export interface OllamaConfig {
     requestsPerMinute: number;
     requestsPerHour: number;
   };
-  features?: {
-    summarize: boolean;
-    translate: boolean;
-    chat: boolean;
-    email: boolean;
-    linkedin: boolean;
-    tutorial: boolean;
-    code: boolean;
-    search: boolean;
-    image: boolean;
-    eventCalendar: boolean;
-    ganttChart: boolean;
-    taskPlanner: boolean;
-  };
   
   // Features configuration
   features: {
