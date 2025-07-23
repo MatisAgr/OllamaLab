@@ -277,10 +277,9 @@ const Launcher = () => {
                   onClick={() => alert(`Navigation vers ${feature.title}`)}
                   className="group w-full text-left"
                   initial={{ y: 32, opacity: 0, scale: 0.95 }}
-                  animate={{ y: 0, opacity: 1, scale: 1 }}
+                  animate={{ y: 0, opacity: 1, scale: 1, transition: { delay: getCardDelay(index), duration: 0.3, type: "spring", stiffness: 80 } }}
                   exit={{ y: 32, opacity: 0, scale: 0.95 }}
-                  transition={{ delay: getCardDelay(index), duration: 0.3, type: "spring", stiffness: 80 }}
-                  whileHover={{ rotate: 2, scale: 1.05, boxShadow: "0 8px 32px rgba(99,102,241,0.10)" }}
+                  whileHover={{ rotate: 2, scale: 1.05, boxShadow: "0 8px 32px rgba(99,102,241,0.10)", transition: { delay: 0, duration: 0.2 } }}
                 >
                   <motion.div
                     className={`bg-white/70 backdrop-blur-sm rounded-2xl p-6 border border-white/30 h-full`}
