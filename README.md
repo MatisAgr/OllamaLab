@@ -2,6 +2,10 @@
 
 OllamaLab is a web-based interface for interacting with Ollama models. It provides a user-friendly way to explore and utilize various models available on the Ollama platform.
 
+
+
+## dev in progress...
+
 ## Tools Checklist
 
 - [ ] **Summarize**: Summarizes text content or documents.
