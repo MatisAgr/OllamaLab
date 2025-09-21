@@ -73,7 +73,7 @@ const Home = () => {
     {
       id: 'tutorial',
       title: 'Tutorial',
-      description: 'Guides détaillés pour tous vos projets',
+      description: 'Création de guides et tutoriels personnalisés',
       icon: FiBookOpen,
       color: 'from-orange-500 to-orange-600',
       path: '/tutorial'
