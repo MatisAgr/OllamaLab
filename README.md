@@ -2,6 +2,7 @@
 
 OllamaLab is a web-based interface for interacting with Ollama models. It provides a user-friendly way to explore and utilize various models available on the Ollama platform.
 
+<img width="2880" height="1800" alt="image" src="https://github.com/user-attachments/assets/3ea58cfc-0d6c-42ea-8593-5d5449aeadcd" />
 
 
 ## dev in progress...
