@@ -10,6 +10,9 @@ import ScrollToTop from "./utils/ScrollToTop";
 // import Navbar from "./components/Navbar/Navbar";
 
 import Home from "./pages/Home";
+import Setup from "./pages/Setup";
+
+import Summarize from "./pages/Summarize";
 
 
 // import Page404 from "./pages/Page404";
@@ -31,7 +34,9 @@ export default function App() {
 
 
             <Route path="/" element={<Home />} />
+            <Route path="/setup" element={<Setup />} />
 
+            <Route path="/summarize" element={<Summarize />} />
 
             {/* <Route path="/profile" element={
               <ProtectedRoute>
